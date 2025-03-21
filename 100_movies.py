@@ -1,21 +1,33 @@
 import requests
 from bs4 import BeautifulSoup
 
+# URL of the archived page
 URL = "https://web.archive.org/web/20200518073855/https://www.empireonline.com/movies/features/best-movies-2/"
 
+# Fetch the page
 response = requests.get(URL)
-website_html=response.text
+website_html = response.text
 
-soup=BeautifulSoup(website_html,"html.parser")
-all_movies=soup.find_all(name="h3",class_="title")
-# print(all_movies)
-movies_titles=[movie.getText() for movie in all_movies]
-movies=(movies_titles[::-1])
+# Parse HTML
+soup = BeautifulSoup(website_html, "html.parser")
 
-for n in range(len(movies_titles)-1,-1,-1):
-    print(movies_titles[n])
+# Find all movie titles (Check class name in case it changes)
+all_movies = soup.find_all(name="h3")
 
+# Extract text from movie titles
+movies_titles = [movie.getText() for movie in all_movies]
 
-with open("movies.txt",mode="w") as file:
+# Reverse the order to match correct ranking
+movies = movies_titles[::-1]
+
+# Print movie titles
+for movie in movies:
+    print(movie)
+
+# Write to a file
+with open(r"C:\Users\YourUsername\Desktop\movies.txt", mode="w", encoding="utf-8") as file:
     for movie in movies:
         file.write(f"{movie}\n")
+
+
+print(len(movies))  # Should print 100
